@@ -291,95 +291,41 @@ PRIVATE struct
  */
 PRIVATE int allocf(void)
 {
-	//int i;  /* Loop index.  */
+	int i;  /* Loop index.  */
 	
 	
-	//#define OLDEST(x, y) (frames[x].age < frames[y].age)
+	#define OLDEST(x, y) (frames[x].age < frames[y].age)
 	
-	//int oldest; /* Oldest page. */
+	int oldest; /* Oldest page. */
 	
-	///* Search for a free frame. */
-	//oldest = -1;
-	//for (i = 0; i < NR_FRAMES; i++)
-	//{
-		///* Found it. */
-		//if (frames[i].count == 0)
-			//goto found;
-		
-		///* Local page replacement policy. */
-		//if (frames[i].owner == curr_proc->pid)
-		//{
-			///* Skip shared pages. */
-			//if (frames[i].count > 1)
-				//continue;
-			
-			///* Oldest page found. */
-			//if ((oldest < 0) || (OLDEST(i, oldest)))
-				//oldest = i;
-		//}
-	//}
-	
-	///* No frame left. */
-	//if (oldest < 0)
-		//return (-1);
-	
-	///* Swap page out. */
-	//if (swap_out(curr_proc, frames[i = oldest].addr))
-		//return (-1);
-	
-//found:		
-
-	//frames[i].age = ticks;
-	//frames[i].count = 1;
-	
-	//return (i);
-	
-	static int i = 0; 
-	
-	struct pte *current_pte ;
-	
-	while(1){	
-			
+	/* Search for a free frame. */
+	oldest = -1;
+	for (i = 0; i < NR_FRAMES; i++)
+	{
 		/* Found it. */
 		if (frames[i].count == 0)
-			goto found;
-			
-		current_pte = getpte(curr_proc, frames[i].addr);
+			//goto found;
 		
-		if(current_pte->accessed==1){
-			current_pte->accessed=0;
-		} else {
+		/* Local page replacement policy. */
+		if (frames[i].owner == curr_proc->pid)
+		{
+			/* Skip shared pages. */
+			if (frames[i].count > 1)
+				//continue;
 			
-				/* Local page replacement policy. */
-			if (frames[i].owner == curr_proc->pid)
-			{
-				/* Skip shared pages. */
-				if (frames[i].count > 1)
-					continue;
-				
-				current_pte = getpte(curr_proc, frames[i].addr);
-				
-				if(!current_pte->accessed){
-					
-					if (swap_out(curr_proc, frames[i].addr)){
-						return (-1);
-					}
-					goto found;
-					
-				} else {
-					current_pte->accessed =  0;
-				}
-				
-			}
+			/* Oldest page found. */
+			if ((oldest < 0) || (OLDEST(i, oldest)))
+				//oldest = i;
 		}
-		
-	
-		
-		i++;
-		
-		i=i%NR_FRAMES;
-	
 	}
+	
+	/* No frame left. */
+	if (oldest < 0)
+		//return (-1);
+	
+	/* Swap page out. */
+	if (swap_out(curr_proc, frames[i = oldest].addr))
+		return (-1);
 	
 found:		
 
@@ -387,6 +333,9 @@ found:
 	frames[i].count = 1;
 	
 	return (i);
+	
+	
+	
 	
 }
 
