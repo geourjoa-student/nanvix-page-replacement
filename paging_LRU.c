@@ -318,14 +318,15 @@ PRIVATE int allocf(void)
 
 	/* Search for a free frame. */
 	oldest = -1;
+
+	if (ticks%100==0)
+		ageUp();
+
 	for (i = 0; i < NR_FRAMES; i++)
 	{
 		/* Found it. */
 		if (frames[i].count == 0)
 			goto found;
-
-		if (ticks%20==0)
-			ageUp();
 
 		if (frames[i].owner == curr_proc->pid)
 		{
