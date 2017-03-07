@@ -279,9 +279,11 @@ PRIVATE struct
 {
 	unsigned count; /**< Reference count.     */
 	unsigned age;   /**< Age.                 */
+	unsigned not_used_for; /**< Age till last usage */
 	pid_t owner;    /**< Page owner.          */
 	addr_t addr;    /**< Address of the page. */
-} frames[NR_FRAMES] = {{0, 0, 0, 0},  };
+} frames[NR_FRAMES] = {{0, 0, 0, 0, 0},  };
+
 
 /**
  * @brief Allocates a page frame.
@@ -289,6 +291,7 @@ PRIVATE struct
  * @returns Upon success, the number of the frame is returned. Upon failure, a
  *          negative number is returned instead.
  */
+
 PRIVATE int allocf(void)
 {
 	
@@ -314,21 +317,11 @@ PRIVATE int allocf(void)
 			{
 				/* Skip shared pages. */
 				if (frames[i].count > 1)
-					continue;
-				
-				current_pte = getpte(curr_proc, frames[i].addr);
-				
-				if(!current_pte->accessed){
-					
-					if (swap_out(curr_proc, frames[i].addr)){
-						return (-1);
-					}
-					goto found;
-					
-				} else {
-					current_pte->accessed =  0;
+					continue;	
+				if (swap_out(curr_proc, frames[i].addr)){
+					return (-1);
 				}
-				
+				goto found;			
 			}
 		}
 		
