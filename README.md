@@ -2,9 +2,11 @@
 Some implementations of Nanvix page replacement algorithm
 
 Compte rendu du TP:
-3 fichiers ont été produits lors de ce TP.
+2 fichiers ont été produits lors de ce TP.
 
 # paging.c
+
+Version origianale présente dans Nanvix.
 
 # paging_seconde_chance.c
 
